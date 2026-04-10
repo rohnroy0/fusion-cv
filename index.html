@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fusion CV - Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <div class="background-elements">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="container" id="container">
+        <!-- Sign Up Form -->
+        <div class="form-container sign-up-container">
+            <form action="dashboard.html" id="signupForm">
+                <div class="logo">
+                    <i class="ri-pages-line"></i> Fusion CV
+                </div>
+                <h2>Create Account</h2>
+                <span class="subtitle">Join to build outstanding resumes</span>
+                <div class="infield">
+                    <i class="ri-user-line"></i>
+                    <input type="text" placeholder="Full Name" required />
+                </div>
+                <div class="infield">
+                    <i class="ri-mail-line"></i>
+                    <input type="email" placeholder="Email Address" required />
+                </div>
+                <div class="infield">
+                    <i class="ri-lock-line"></i>
+                    <input type="password" placeholder="Password" required />
+                </div>
+                <button type="submit" class="btn">Sign Up <i class="ri-arrow-right-line"></i></button>
+                <p class="mobile-toggle">Already have an account? <a href="#" id="mobileSignIn">Sign In</a></p>
+            </form>
+        </div>
+
+        <!-- Sign In Form -->
+        <div class="form-container sign-in-container">
+            <form action="dashboard.html" id="loginForm">
+                <div class="logo">
+                    <i class="ri-pages-line"></i> Fusion CV
+                </div>
+                <h2>Welcome Back</h2>
+                <span class="subtitle">Sign in to continue your journey</span>
+                <div class="infield">
+                    <i class="ri-mail-line"></i>
+                    <input type="email" placeholder="Email Address" required />
+                </div>
+                <div class="infield">
+                    <i class="ri-lock-line"></i>
+                    <input type="password" placeholder="Password" required />
+                </div>
+                <a href="#" class="forgot">Forgot your password?</a>
+                <button type="submit" class="btn">Sign In <i class="ri-arrow-right-line"></i></button>
+                <p class="mobile-toggle">Don't have an account? <a href="#" id="mobileSignUp">Sign Up</a></p>
+            </form>
+        </div>
+
+        <!-- Overlay Container for Desktop -->
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h2>Welcome Back!</h2>
+                    <p>To keep connected with us please login with your personal info</p>
+                    <button class="ghost" id="signIn">Sign In</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h2>Hello, Friend!</h2>
+                    <p>Enter your personal details and start building ATS-friendly resumes</p>
+                    <button class="ghost" id="signUp">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
