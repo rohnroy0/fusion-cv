@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,9 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
         /* Toast Notifications */
@@ -17,6 +20,7 @@
             right: 20px;
             z-index: 9999;
         }
+
         .toast {
             background: rgba(24, 24, 27, 0.8);
             backdrop-filter: blur(10px);
@@ -32,17 +36,29 @@
             transform: translateX(120%);
             transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
+
         .toast.show {
             transform: translateX(0);
         }
+
         .toast i {
             font-size: 20px;
         }
-        .toast.success i { color: #10b981; }
-        .toast.error i { color: #ef4444; }
-        .toast.info i { color: #3b82f6; }
+
+        .toast.success i {
+            color: #10b981;
+        }
+
+        .toast.error i {
+            color: #ef4444;
+        }
+
+        .toast.info i {
+            color: #3b82f6;
+        }
     </style>
 </head>
+
 <body>
     <div class="toast-container" id="toastContainer"></div>
     <div class="background-elements">
@@ -73,6 +89,24 @@
                 </div>
                 <button type="submit" class="btn">Sign Up <i class="ri-arrow-right-line"></i></button>
                 <p class="mobile-toggle">Already have an account? <a href="#" id="mobileSignIn">Sign In</a></p>
+
+                <div class="features-list"
+                    style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; color: #a1a1aa;">
+                            <i class="ri-checkbox-circle-fill" style="color: #10b981;"></i> AI Resume Builder
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; color: #a1a1aa;">
+                            <i class="ri-checkbox-circle-fill" style="color: #10b981;"></i> ATS Score Check
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; color: #a1a1aa;">
+                            <i class="ri-checkbox-circle-fill" style="color: #10b981;"></i> Instant PDF Download
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; color: #a1a1aa;">
+                            <i class="ri-checkbox-circle-fill" style="color: #10b981;"></i> Refine Your Resume
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
 
@@ -95,6 +129,24 @@
                 <a href="#" class="forgot">Forgot your password?</a>
                 <button type="submit" class="btn">Sign In <i class="ri-arrow-right-line"></i></button>
                 <p class="mobile-toggle">Don't have an account? <a href="#" id="mobileSignUp">Sign Up</a></p>
+
+                <div class="features-list"
+                    style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; color: #a1a1aa;">
+                            <i class="ri-checkbox-circle-fill" style="color: #10b981;"></i> AI Resume Builder
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; color: #a1a1aa;">
+                            <i class="ri-checkbox-circle-fill" style="color: #10b981;"></i> ATS Score Check
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; color: #a1a1aa;">
+                            <i class="ri-checkbox-circle-fill" style="color: #10b981;"></i> Instant PDF Download
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; color: #a1a1aa;">
+                            <i class="ri-checkbox-circle-fill" style="color: #10b981;"></i> Refine Your Resume
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
 
@@ -119,4 +171,5 @@
     <script src="supabase-config.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>
