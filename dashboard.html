@@ -1,47 +1,1393 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fusion CV - Dashboard</title>
+    <title>Fusion CV - AI-Powered Career Platform</title>
+    <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
-        body { 
-            margin: 0; 
-            padding: 0; 
-            background-color: #09090b; 
-            color: #f4f4f5; 
-            font-family: 'Outfit', sans-serif; 
-            display: flex; 
+        body {
+            display: block;
+            overflow-x: hidden;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            background: #09090b;
+        }
+
+        .background-elements {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        /* Nav Styles */
+        nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            background: rgba(24, 24, 27, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            text-decoration: none;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            /* Standard property for compatibility */
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #a1a1aa;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .nav-btn {
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 13px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(129, 140, 248, 0.4);
+        }
+
+        /* Account Dropdown */
+        .account-container {
+            position: relative;
+        }
+
+        .account-dropdown {
+            position: absolute;
+            top: calc(100% + 15px);
+            right: 0;
+            width: 240px;
+            background: rgba(24, 24, 27, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1001;
+        }
+
+        .account-container:hover .account-dropdown,
+        .account-dropdown.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .user-email {
+            font-size: 12px;
+            color: #a1a1aa;
+            display: block;
+            margin-top: 4px;
+            word-break: break-all;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            color: #e2e8f0;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.3s;
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .dropdown-item i {
+            font-size: 18px;
+            color: #818cf8;
+        }
+
+        .dropdown-item.logout {
+            color: #f87171;
+            margin-top: 10px;
+        }
+
+        .dropdown-item.logout i {
+            color: #f87171;
+        }
+
+        /* Mobile Menu */
+        .mobile-toggle-btn {
+            display: none;
+            color: #fff;
+            font-size: 24px;
+        }
+
+        /* Template Section - Carousel */
+        .templates-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 40px auto 0;
+            padding: 0 60px;
+            box-sizing: border-box;
+        }
+
+        .template-carousel {
+            display: flex;
+            gap: 30px;
+            overflow-x: auto;
+            /* Enable native horizontal scroll */
+            scroll-behavior: smooth;
+            padding: 20px 0;
+            cursor: grab;
+            scroll-snap-type: x mandatory;
+            /* Force snapping */
+            scrollbar-width: none;
+            /* Hide scrollbar for cleaner look */
+        }
+
+        .template-carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .template-card {
+            background: rgba(24, 24, 27, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            flex: 0 0 calc(33.333% - 20px);
+            /* 3 cards on desktop */
+            min-width: 280px;
+            scroll-snap-align: center;
+            /* Snap to center of card */
+        }
+
+        @media (max-width: 1024px) {
+            .template-card {
+                flex: 0 0 calc(50% - 15px);
+            }
+
+            /* 2 cards */
+        }
+
+        @media (max-width: 768px) {
+            .templates-wrapper {
+                padding: 0 20px;
+            }
+
+            .template-card {
+                flex: 0 0 calc(100% - 10px);
+                scroll-snap-align: start;
+                /* Align to container start for small width */
+            }
+
+            .template-preview {
+                height: 300px;
+            }
+
+            .carousel-arrow {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(139, 92, 246, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 50%;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+
+        .carousel-arrow:hover {
+            background: #8b5cf6;
+        }
+
+        .arrow-left {
+            left: 0;
+        }
+
+        .arrow-right {
+            right: 0;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: #8b5cf6;
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        .template-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(139, 92, 246, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .template-preview {
+            width: 100%;
+            height: 350px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .template-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(139, 92, 246, 0.2);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .template-card:hover .template-overlay {
+            opacity: 1;
+        }
+
+        .template-info {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .template-tag {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8b5cf6;
+            font-weight: 700;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        /* Container & Sizing */
+        main {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            padding: 120px 20px 60px;
+            text-align: center;
+            display: flex;
             flex-direction: column;
-            align-items: center; 
-            justify-content: center; 
-            height: 100vh; 
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            /* Predictable spacing prevents overlaps */
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: radial-gradient(circle at top, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+            z-index: -1;
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 8vw, 72px);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            max-width: 900px;
+            margin: 0;
+        }
+
+        .hero-subtitle {
+            color: #a1a1aa;
+            font-size: clamp(14px, 2vw, 18px);
+            max-width: 700px;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0 20px;
+        }
+
+        .workflow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+            position: relative;
+        }
+
+        .flow-step {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 24px;
+            border-radius: 20px;
+            flex: 1;
+            z-index: 2;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .flow-step:hover,
+        .flow-step.active {
+            transform: translateY(-5px);
+            border-color: rgba(139, 92, 246, 0.4);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .flow-step i {
+            font-size: 32px;
+            color: #8b5cf6;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .mobile-flow-content {
+            display: none;
+            width: 100%;
+            max-width: 400px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            padding: 20px;
+            border-radius: 20px;
+            margin-top: 20px;
+            text-align: center;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .flow-line {
+            height: 2px;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            flex: 0.5;
+            opacity: 0.3;
+        }
+
+        /* Sections */
+        .section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .section-header {
+            margin-bottom: 60px;
             text-align: center;
         }
-        .icon {
-            font-size: 64px;
-            color: #8b5cf6;
-            margin-bottom: 20px;
+
+        .section-header h2 {
+            font-size: 42px;
+            margin-bottom: 15px;
         }
-        h1 {
+
+        .feature-card {
+            background: rgba(24, 24, 27, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 32px;
+            padding: 40px;
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .feature-image {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(129, 140, 248, 0.05), rgba(192, 132, 252, 0.05));
+            height: 350px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* ATS Visual - Score Meter */
+        .ats-visual {
+            width: 200px;
+            height: 100px;
+            background: rgba(139, 92, 246, 0.05);
+            border: 2px solid rgba(139, 92, 246, 0.2);
+            border-bottom: 0;
+            border-radius: 100px 100px 0 0;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            overflow: visible;
+        }
+
+        .meter-mark {
+            position: absolute;
+            bottom: -5px;
+            font-size: 10px;
+            color: #71717a;
+            font-weight: 600;
+        }
+
+        .mark-0 {
+            left: -10px;
+        }
+
+        .mark-20 {
+            left: 15px;
+            bottom: 35px;
+            transform: rotate(-60deg);
+        }
+
+        .mark-40 {
+            left: 55px;
+            bottom: 75px;
+            transform: rotate(-30deg);
+        }
+
+        .mark-60 {
+            right: 55px;
+            bottom: 75px;
+            transform: rotate(30deg);
+        }
+
+        .mark-80 {
+            right: 15px;
+            bottom: 35px;
+            transform: rotate(60deg);
+        }
+
+        .mark-100 {
+            right: -20px;
+        }
+
+        .meter-needle {
+            width: 4px;
+            height: 80px;
+            background: linear-gradient(to top, #8b5cf6, #c084fc);
+            position: absolute;
+            bottom: 0;
+            left: calc(50% - 2px);
+            border-radius: 4px;
+            transform-origin: bottom center;
+            transform: rotate(-90deg);
+            /* Managed by JS */
+            z-index: 2;
+        }
+
+        .meter-center {
+            width: 24px;
+            height: 24px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -12px;
+            z-index: 4;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+        }
+
+        .meter-value {
+            position: absolute;
+            bottom: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(to right, #fff, #a1a1aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            z-index: 3;
+        }
+
+        /* AI Visual - Glowing Sparkles */
+        .ai-visual {
+            position: relative;
+            font-size: 80px;
+            color: #c084fc;
+            filter: drop-shadow(0 0 20px rgba(192, 132, 252, 0.5));
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border-radius: 50%;
+            animation: sparkle-move 2s infinite;
+        }
+
+        @keyframes sparkle-move {
+            0% {
+                transform: translate(0, 0) scale(0);
+                opacity: 0;
+            }
+
+            50% {
+                transform: translate(var(--x), var(--y)) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(calc(var(--x) * 1.5), calc(var(--y) * 1.5)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .feature-content {
+            flex: 1;
+        }
+
+        /* Mission Card */
+        .mission-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
+            padding: 60px;
+            max-width: 1000px;
+            margin: 0 auto;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mission-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .mission-card h3 {
             font-size: 32px;
-            margin-bottom: 10px;
+            background: linear-gradient(to right, #fff, #a1a1aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 24px;
         }
-        p {
-            color: #a1a1aa;
-            font-size: 16px;
+
+        .mission-card p {
+            color: #e2e8f0;
+            line-height: 2;
+            font-size: 17px;
+            letter-spacing: 0.2px;
+        }
+
+        .mission-highlight {
+            color: #fff;
+            font-weight: 600;
+            background: rgba(139, 92, 246, 0.1);
+            padding: 2px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .mobile-tagline {
+            display: none;
+            /* Desktop */
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .hero-subtitle {
+                display: none;
+            }
+
+            nav {
+                width: 95%;
+                top: 10px;
+                padding: 10px 20px;
+            }
+
+            .hero {
+                padding-top: 80px;
+                padding-bottom: 40px;
+                height: 100vh;
+                min-height: 550px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                gap: 25px;
+                /* Unified flex spacing */
+            }
+
+            .hero h1 {
+                font-size: 32px;
+                font-weight: 800;
+                line-height: 1.1;
+                padding: 0 20px;
+                margin: 0;
+            }
+
+            .hero-subtitle {
+                display: block;
+                font-size: 14px;
+                line-height: 1.6;
+                color: #a1a1aa;
+                padding: 0 20px;
+                margin: 0;
+                position: static;
+                /* Re-flow naturally */
+            }
+
+            .mobile-tagline {
+                display: none;
+            }
+
+            .hero::before {
+                height: 150%;
+            }
+
+            /* Extend color deeper on mobile */
+
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 50%;
+                transform: translateX(-50%) translateY(-20px);
+                width: 90%;
+                background: rgba(24, 24, 27, 0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 30px;
+                border-radius: 24px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.3s ease;
+                gap: 20px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            }
+
+            .nav-links.active {
+                opacity: 1;
+                pointer-events: auto;
+                transform: translateX(-50%) translateY(10px);
+            }
+
+            .mobile-toggle-btn {
+                display: block;
+                cursor: pointer;
+            }
+
+            .workflow {
+                flex-direction: row !important;
+                justify-content: center;
+                gap: 15px;
+                padding: 0;
+                width: 100%;
+                margin-top: 5px;
+                overflow: visible;
+            }
+
+            .flow-step {
+                min-width: 55px;
+                /* Smaller circles */
+                width: 55px;
+                height: 55px;
+                border-radius: 50% !important;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex: none;
+                background: rgba(139, 92, 246, 0.1);
+                border: 2px solid rgba(139, 92, 246, 0.2);
+            }
+
+            .flow-step.active {
+                background: #8b5cf6;
+                border-color: #fff;
+                box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+            }
+
+            .flow-step i {
+                margin-bottom: 0;
+                font-size: 24px;
+                color: #fff;
+            }
+
+            .flow-step h3,
+            .flow-step p {
+                display: none;
+            }
+
+            .mobile-flow-content {
+                display: block;
+                margin-top: 5px;
+                padding: 12px;
+                max-width: 300px;
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid rgba(255, 255, 255, 0.05);
+            }
+
+            .mobile-flow-content h4 {
+                font-size: 15px;
+                margin-bottom: 4px;
+                color: #fff;
+            }
+
+            .mobile-flow-content p {
+                font-size: 12px;
+                line-height: 1.4;
+                color: #a1a1aa;
+            }
+
+            .flow-line {
+                display: none;
+            }
+
+            .section {
+                padding: 40px 20px;
+                min-height: auto;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .feature-card {
+                flex-direction: column;
+                padding: 25px;
+                text-align: center;
+                gap: 20px;
+            }
+
+            .feature-image {
+                width: 100%;
+                height: 250px;
+                order: -1;
+            }
+
+            .section-header h2 {
+                font-size: 30px;
+            }
+
+            .mission-card {
+                padding: 40px 25px;
+                border-radius: 24px;
+            }
+
+            .mission-card h3 {
+                font-size: 26px;
+            }
+
+            .mission-card p {
+                font-size: 15px;
+                line-height: 1.8;
+            }
+
+            .hero {
+                padding-top: 80px;
+                padding-bottom: 120px;
+                /* Space for subtitle at bottom */
+                height: 100vh;
+                min-height: 550px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+                line-height: 1.1;
+                margin-bottom: 30px;
+            }
+
+            .mobile-tagline {
+                display: none;
+                /* Hide tagline to show main subtitle instead */
+            }
+
+            .hero-subtitle {
+                display: block;
+                position: absolute;
+                bottom: 30px;
+                font-size: 13px;
+                line-height: 1.6;
+                color: #a1a1aa;
+                padding: 0 30px;
+                max-width: 320px;
+                margin-top: 0;
+            }
+
+            .workflow {
+                flex-direction: row !important;
+                justify-content: center;
+                gap: 20px;
+                margin: 20px 0;
+            }
+
+            .flow-step {
+                min-width: 65px;
+                width: 65px;
+                height: 65px;
+            }
+
+            .template-grid {
+                gap: 20px;
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+
+            .feature-card {
+                flex-direction: column !important;
+                /* Force same direction */
+                padding: 30px 20px;
+                text-align: center;
+                gap: 25px;
+                align-items: center;
+            }
+
+            .feature-image {
+                width: 100%;
+                max-width: 280px;
+                height: 220px;
+                order: 0;
+                margin: 0 auto;
+                background: linear-gradient(135deg, rgba(129, 140, 248, 0.05), rgba(192, 132, 252, 0.05));
+                border: 1px solid rgba(255, 255, 255, 0.05);
+                border-radius: 20px;
+            }
+
+            .feature-content {
+                display: contents;
+                /* Allow children to participate in card's flex layout */
+            }
+
+            .feature-content h2 {
+                order: -1;
+            }
+
+            /* Headline on top */
+            .feature-content div:first-child {
+                order: -2;
+            }
+
+            /* Tag on very top */
+            .feature-content p {
+                order: 1;
+                margin-top: 10px;
+            }
+
+            .feature-content button {
+                order: 2;
+                margin-top: 5px;
+            }
         }
     </style>
 </head>
+
 <body>
-    <div class="icon">
-        <i class="ri-dashboard-line"></i>
+    <div class="background-elements">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
     </div>
-    <h1>Welcome to Dashboard</h1>
-    <p>This is a blank page placeholder for the application area.</p>
+
+    <nav id="navbar">
+        <a href="#hero" class="nav-logo">
+            <i class="ri-pages-line"></i> Fusion CV
+        </a>
+        <div class="nav-links" id="navLinks">
+            <a href="#ats-checker" onclick="toggleMenu()">ATS Checker</a>
+            <a href="#ai-builder" onclick="toggleMenu()">AI Builder</a>
+            <a href="#templates" onclick="toggleMenu()">Templates</a>
+            <a href="#contact" onclick="toggleMenu()">Contact Us</a>
+
+            <!-- Account Section -->
+            <div class="account-container" id="accountSection">
+                <button class="nav-btn" id="accountBtn">
+                    <i class="ri-user-heart-line"></i> My Account
+                </button>
+                <div class="account-dropdown" id="accountDropdown">
+                    <div class="dropdown-header">
+                        <strong style="display: block; color: #fff;">User Profile</strong>
+                        <span class="user-email" id="displayEmail">loading...</span>
+                    </div>
+                    <a href="#" class="dropdown-item">
+                        <i class="ri-download-cloud-2-line"></i>
+                        <span>My Downloads</span>
+                    </a>
+                    <div class="dropdown-item logout" id="signOutBtn" onclick="handleSignOut()">
+                        <i class="ri-logout-box-r-line"></i>
+                        <span>Sign Out</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <i class="ri-menu-line mobile-toggle-btn" id="menuBtn"></i>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" id="hero">
+            <h1>
+                Craft Your Career with <br>
+                <span class="gradient-text">Fusion CV</span>
+                <span class="mobile-tagline">
+                    AI-powered resume builder designed for professional ATS-optimized resumes.
+                </span>
+            </h1>
+
+            <div class="workflow" id="workflow-section">
+                <div class="flow-step active" id="step1" onclick="updateFlowContent(1)">
+                    <i class="ri-edit-box-line"></i>
+                    <h3>Input Details</h3>
+                    <p>Fill out a guided step-by-step form or upload resume.</p>
+                </div>
+                <div class="flow-line"></div>
+                <div class="flow-step" id="step2" onclick="updateFlowContent(2)">
+                    <i class="ri-magic-line"></i>
+                    <h3>AI Optimize</h3>
+                    <p>AI engine transforms input into keyword-rich content.</p>
+                </div>
+                <div class="flow-line"></div>
+                <div class="flow-step" id="step3" onclick="updateFlowContent(3)">
+                    <i class="ri-file-download-line"></i>
+                    <h3>Get PDF</h3>
+                    <p>Download print-ready, ATS-friendly PDFs instantly.</p>
+                </div>
+            </div>
+
+            <div class="mobile-flow-content" id="flowDetail">
+                <h4 id="flowTitle">Input Details</h4>
+                <p id="flowDesc">Fill out a guided step-by-step form or upload resume.</p>
+            </div>
+
+            <p class="hero-subtitle">
+                Our platform is an intelligent AI-powered resume builder designed to help job seekers create
+                professional, ATS-optimized resumes with ease.
+            </p>
+        </section>
+
+        <!-- ATS Checker Section -->
+        <section class="section" id="ats-checker">
+            <div class="feature-card">
+                <div class="feature-content">
+                    <div style="color: #8b5cf6; font-weight: 600; margin-bottom: 10px;">VALIDATE EXCELLENCE</div>
+                    <h2>ATS Resume Checker</h2>
+                    <p style="color: #d1d5db; line-height: 1.6; margin-bottom: 25px;">Upload an existing resume to
+                        receive an instant ATS score along with actionable suggestions for improvement. Our system
+                        ensures your resume aligns with modern industry standards and hiring systems.</p>
+                    <button class="btn" style="padding: 12px 28px;">Analyze Resume <i
+                            class="ri-shield-check-line"></i></button>
+                </div>
+                <div class="feature-image">
+                    <div class="ats-visual">
+                        <span class="meter-mark mark-0">0</span>
+                        <span class="meter-mark mark-20">20</span>
+                        <span class="meter-mark mark-40">40</span>
+                        <span class="meter-mark mark-60">60</span>
+                        <span class="meter-mark mark-80">80</span>
+                        <span class="meter-mark mark-100">100</span>
+                        <div class="meter-needle" id="meterNeedle"></div>
+                        <div class="meter-center"></div>
+                        <div class="meter-value" id="currentScore">0%</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Builder Section -->
+        <section class="section" id="ai-builder">
+            <div class="feature-card" style="flex-direction: row-reverse;">
+                <div class="feature-content">
+                    <div style="color: #c084fc; font-weight: 600; margin-bottom: 10px;">CREATIVE PRECISION</div>
+                    <h2>AI Resume Builder</h2>
+                    <p style="color: #d1d5db; line-height: 1.6; margin-bottom: 25px;">Transform raw user input into
+                        well-structured, keyword-rich, and professionally written content. Additionally, users have full
+                        control to edit and refine the generated content, ensuring personalization and accuracy.</p>
+                    <button class="btn"
+                        style="padding: 12px 28px; background: linear-gradient(135deg, #c084fc, #8b5cf6);">Create Your
+                        CV <i class="ri-magic-line"></i></button>
+                </div>
+                <div class="feature-image">
+                    <div class="ai-visual">
+                        <i class="ri-magic-line"></i>
+                        <span class="sparkle" style="--x: -40px; --y: -40px; animation-delay: 0s;"></span>
+                        <span class="sparkle" style="--x: 40px; --y: -30px; animation-delay: 0.5s;"></span>
+                        <span class="sparkle" style="--x: -30px; --y: 40px; animation-delay: 1s;"></span>
+                        <span class="sparkle" style="--x: 40px; --y: 35px; animation-delay: 1.5s;"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Template Selection Section -->
+        <section class="section" id="templates">
+            <div class="section-header">
+                <h2>Choose Your Template</h2>
+                <p style="color: #d1d5db;">Select a professional layout to start building your AI-enhanced resume.</p>
+            </div>
+
+            <div class="templates-wrapper">
+                <button class="carousel-arrow arrow-left" id="prevTemplate"><i
+                        class="ri-arrow-left-s-line"></i></button>
+                <div class="template-carousel" id="templateCarousel">
+                    <script>
+                        const templates = [
+                            { name: "Executive Minimal", tag: "Modern", icon: "ri-layout-masonry-line" },
+                            { name: "Dynamic Startup", tag: "Creative", icon: "ri-layout-2-line" },
+                            { name: "Professional Corporate", tag: "Enterprise", icon: "ri-article-line" },
+                            { name: "Ethereal Design", tag: "Premium", icon: "ri-magic-line" },
+                            { name: "Classic Academic", tag: "Graduate", icon: "ri-book-read-line" },
+                            { name: "Tech Innovator", tag: "Developer", icon: "ri-code-s-slash-line" },
+                            { name: "Global HR", tag: "Recruiter", icon: "ri-global-line" },
+                            { name: "Creative Bloom", tag: "Artistic", icon: "ri-brush-line" },
+                            { name: "Simple Focus", tag: "Minimal", icon: "ri-focus-line" },
+                            { name: "Elite Business", tag: "Luxury", icon: "ri-vip-crown-line" },
+                            { name: "SaaS Specialist", tag: "Cloud", icon: "ri-cloud-line" },
+                            { name: "Visual Storyteller", tag: "Portfolio", icon: "ri-image-line" },
+                            { name: "Quick Start", tag: "Fast", icon: "ri-flashlight-line" },
+                            { name: "Precision Pro", tag: "Data", icon: "ri-pie-chart-line" },
+                            { name: "Future Vision", tag: "AI", icon: "ri-robot-line" }
+                        ];
+
+                        document.write(templates.map(t => `
+                            <div class="template-card">
+                                <div class="template-preview">
+                                    <i class="${t.icon}" style="opacity: 0.1; font-size: 80px;"></i>
+                                    <div class="template-overlay">
+                                        <button class="btn" style="padding: 10px 20px;">Use Template</button>
+                                    </div>
+                                </div>
+                                <div class="template-info">
+                                    <span class="template-tag">${t.tag}</span>
+                                    <h4 style="color: #fff;">${t.name}</h4>
+                                </div>
+                            </div>
+                        `).join(''));
+                    </script>
+                </div>
+                <button class="carousel-arrow arrow-right" id="nextTemplate"><i
+                        class="ri-arrow-right-s-line"></i></button>
+                <div class="carousel-dots" id="carouselDots">
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About/Detailed Content Section -->
+        <section class="section">
+            <div class="mission-card">
+                <h3>Our Mission</h3>
+                <p>
+                    Our platform addresses the problem of resume filtration by combining <span
+                        class="mission-highlight">AI Resume Builder</span> and <span class="mission-highlight">ATS
+                        Resume Checker</span> into a single, user-friendly portal. We offer multiple ATS-friendly
+                    templates that allow you to customize visual presentation without sacrificing content quality. Built
+                    with modern tech, Fusion CV ensures a fast, responsive, and <span class="mission-highlight">seamless
+                        experience</span> on any device. By simplifying creation and enhancing visibility, we empower
+                    students and professionals to land more interviews and advance their careers.
+                </p>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="section" id="contact" style="text-align: center;">
+            <div class="section-header">
+                <h2>Get In Touch</h2>
+                <p style="color: #a1a1aa;">Have questions? We're here to help you advance your career.</p>
+            </div>
+            <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;">
+                <div style="background: rgba(255,255,255,0.03); padding: 30px; border-radius: 20px; width: 250px;">
+                    <i class="ri-mail-send-line" style="font-size: 32px; color: #818cf8;"></i>
+                    <h4 style="margin: 15px 0 5px;">Email Us</h4>
+                    <p style="font-size: 14px; color: #71717a;">support@fusioncv.com</p>
+                </div>
+                <div style="background: rgba(255,255,255,0.03); padding: 30px; border-radius: 20px; width: 250px;">
+                    <i class="ri-message-3-line" style="font-size: 32px; color: #c084fc;"></i>
+                    <h4 style="margin: 15px 0 5px;">Live Chat</h4>
+                    <p style="font-size: 14px; color: #71717a;">Available 24/7</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer
+        style="padding: 40px 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); color: #71717a; font-size: 14px;">
+        <p>&copy; 2026 Fusion CV. All rights reserved.</p>
+    </footer>
+
+    <!-- Same Toast System -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+        // Navbar Smart Scroll effect
+        let lastScrollY = window.scrollY;
+        const navbar = document.getElementById('navbar');
+
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+
+            // Show at top, else follow scroll direction
+            if (currentScrollY < 50) {
+                navbar.style.transform = 'translateX(-50%) translateY(0)';
+                navbar.style.background = 'rgba(24, 24, 27, 0.6)';
+                navbar.style.top = '20px';
+            } else {
+                if (currentScrollY > lastScrollY) {
+                    navbar.style.transform = 'translateX(-50%) translateY(-150px)';
+                } else {
+                    navbar.style.transform = 'translateX(-50%) translateY(0)';
+                    navbar.style.background = 'rgba(9, 9, 11, 0.9)';
+                    navbar.style.top = '10px';
+                }
+            }
+            lastScrollY = currentScrollY;
+        });
+
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+
+        function toggleMenu() {
+            if (window.innerWidth <= 768) {
+                navLinks.classList.toggle('active');
+                menuBtn.classList.toggle('ri-menu-line');
+                menuBtn.classList.toggle('ri-close-line');
+            }
+        }
+
+        if (menuBtn) {
+            menuBtn.addEventListener('click', toggleMenu);
+        }
+
+        // Initialize User Data
+        async function initUser() {
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            const displayEmail = document.getElementById('displayEmail');
+
+            if (user) {
+                displayEmail.textContent = user.email;
+            } else {
+                // If no user, redirect to login
+                location.href = 'index.html';
+            }
+        }
+
+        async function handleSignOut() {
+            const { error } = await supabaseClient.auth.signOut();
+            if (!error) location.href = 'index.html';
+        }
+
+        // Start initialization
+        initUser();
+        startMeterAnimation();
+        initTemplateCarousel();
+
+        function initTemplateCarousel() {
+            const carousel = document.getElementById('templateCarousel');
+            const dots = document.querySelectorAll('.dot');
+            const prev = document.getElementById('prevTemplate');
+            const next = document.getElementById('nextTemplate');
+
+            const updateDots = () => {
+                const scrollLeft = carousel.scrollLeft;
+                const totalWidth = carousel.scrollWidth - carousel.clientWidth;
+                const index = Math.round((scrollLeft / totalWidth) * 4);
+                if (index < dots.length) {
+                    dots.forEach((d, i) => d.classList.toggle('active', i === index));
+                }
+            };
+
+            next.onclick = () => {
+                const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+                if (carousel.scrollLeft >= maxScroll - 10) {
+                    carousel.scrollLeft = 0;
+                } else {
+                    carousel.scrollLeft += carousel.clientWidth;
+                }
+                setTimeout(updateDots, 300);
+            };
+
+            prev.onclick = () => {
+                if (carousel.scrollLeft <= 10) {
+                    carousel.scrollLeft = carousel.scrollWidth;
+                } else {
+                    carousel.scrollLeft -= carousel.clientWidth;
+                }
+                setTimeout(updateDots, 300);
+            };
+
+            carousel.onscroll = updateDots;
+        }
+
+        function startMeterAnimation() {
+            const scoreEl = document.getElementById('currentScore');
+            const needleEl = document.getElementById('meterNeedle');
+            let forward = true;
+            let val = 0;
+
+            setInterval(() => {
+                if (forward) {
+                    val += 0.8;
+                    if (val >= 85) forward = false;
+                } else {
+                    val -= 0.3;
+                    if (val <= 0) forward = true;
+                }
+
+                // Display the percentage
+                const currentVal = Math.floor(val);
+                scoreEl.textContent = currentVal + '%';
+
+                // Sync the needle: 
+                // 0%   = -90deg
+                // 50%  = 0deg
+                // 100% = 90deg
+                // Rotation = (percentage * 1.8) - 90
+                const rotation = (val * 1.8) - 90;
+                needleEl.style.transform = `rotate(${rotation}deg)`;
+            }, 30);
+        }
+
+        // Workflow Interaction
+        function updateFlowContent(step) {
+            const steps = [
+                { title: "Input Details", desc: "Fill out a guided step-by-step form or upload your existing resume to get started with our intelligent builder." },
+                { title: "AI Optimize", desc: "Our powerful AI engine analyzes your input and transforms it into professionally written, keyword-rich content optimized for ATS." },
+                { title: "Get PDF", desc: "Once satisfied, download your resume as a clean, print-ready PDF instantly. Your career upgrade is just one click away!" }
+            ];
+
+            const current = steps[step - 1];
+
+            // Update Text with animation
+            const detailCard = document.getElementById('flowDetail');
+            detailCard.style.animation = 'none';
+            detailCard.offsetHeight; // trigger reflow
+            detailCard.style.animation = 'slideUp 0.3s ease';
+
+            document.getElementById('flowTitle').textContent = current.title;
+            document.getElementById('flowDesc').textContent = current.desc;
+
+            // Update Active Step
+            document.querySelectorAll('.flow-step').forEach(s => s.classList.remove('active'));
+            document.getElementById(`step${step}`).classList.add('active');
+        }
+    </script>
 </body>
+
 </html>
