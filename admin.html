@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fusion CV - Admin Portal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        body {
+            display: block;
+            overflow-y: auto;
+            padding: 40px 20px;
+        }
+        .admin-header {
+            max-width: 1000px;
+            margin: 0 auto 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .admin-title h1 {
+            font-size: 28px;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+        .admin-card {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(24, 24, 27, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th {
+            text-align: left;
+            padding: 12px 15px;
+            color: #a1a1aa;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+            color: #e2e8f0;
+        }
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status-active {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        .loading-state {
+            text-align: center;
+            padding: 40px;
+            color: #a1a1aa;
+        }
+        .loading-state i {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-elements">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="admin-header">
+        <div class="admin-title">
+            <h1><i class="ri-shield-user-line"></i> Admin Portal</h1>
+            <p style="color: #a1a1aa; font-size: 14px;">User Management Dashboard</p>
+        </div>
+        <button class="ghost" onclick="location.href='index.html'" style="padding: 10px 20px; font-size: 13px;">Logout</button>
+    </div>
+
+    <div class="admin-card">
+        <div id="userList">
+            <div class="loading-state">
+                <i class="ri-loader-4-line ri-spin"></i>
+                Fetching users...
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+        async function fetchUsers() {
+            const userListDiv = document.getElementById('userList');
+            
+            // Note: By default, Supabase Client (Anon Key) cannot list all users in Auth.users
+            // This usually requires a Service Role Key or a custom 'profiles' table.
+            // For now, let's attempt to fetch from a 'profiles' table which is the standard practice.
+            
+            const { data, error } = await supabaseClient
+                .from('profiles')
+                .select('*');
+
+            if (error) {
+                userListDiv.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: #ef4444;">
+                        <i class="ri-error-warning-line" style="font-size: 32px;"></i>
+                        <p>Error: ${error.message}</p>
+                        <p style="font-size: 12px; margin-top: 10px; color: #a1a1aa;">Tip: Ensure you have created a 'profiles' table in Supabase.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            if (data.length === 0) {
+                userListDiv.innerHTML = '<p style="text-align: center; color: #a1a1aa;">No users found.</p>';
+                return;
+            }
+
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Joined Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            data.forEach(user => {
+                html += `
+                    <tr>
+                        <td><strong>${user.full_name || 'Anonymous'}</strong></td>
+                        <td>${user.email || 'N/A'}</td>
+                        <td>${new Date(user.created_at).toLocaleDateString()}</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                    </tr>
+                `;
+            });
+
+            html += '</tbody></table>';
+            userListDiv.innerHTML = html;
+        }
+
+        window.onload = fetchUsers;
+    </script>
+</body>
+</html>
