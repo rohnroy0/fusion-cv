@@ -181,10 +181,12 @@
     <script>
         const ADMIN_EMAIL = 'admin@fusioncv.com';
 
-        // Check for existing session on load
+        // Session logic: Stay logged in on refresh (sessionStorage), but re-login if tab is closed
         window.onload = async () => {
             const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session && session.user.email === ADMIN_EMAIL) {
+            const isAdminSession = sessionStorage.getItem('fusion_admin_session');
+            
+            if (session && session.user.email === ADMIN_EMAIL && isAdminSession === 'true') {
                 showPortal();
             } else {
                 document.getElementById('adminLoginView').style.display = 'flex';
@@ -192,12 +194,18 @@
         };
 
         function showPortal() {
+            // Hide everything related to login
             document.getElementById('adminLoginView').style.display = 'none';
+            const overlay = document.getElementById('successOverlay');
+            if (overlay) overlay.remove();
+            
+            // Show main content
             document.getElementById('adminMainContent').style.display = 'block';
             fetchUsers();
         }
 
         async function adminLogout() {
+            sessionStorage.removeItem('fusion_admin_session');
             await supabaseClient.auth.signOut();
             location.reload();
         }
@@ -219,8 +227,10 @@
                 btn.disabled = false;
                 btn.innerHTML = 'Access Portal <i class="ri-arrow-right-line"></i>';
             } else {
+                // Set short-term session flag
+                sessionStorage.setItem('fusion_admin_session', 'true');
                 showSuccessOverlay();
-                setTimeout(() => showPortal(), 2000);
+                setTimeout(showPortal, 800);
             }
         });
 
