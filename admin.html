@@ -82,6 +82,54 @@
             display: block;
             margin-bottom: 10px;
         }
+        /* Mobile Enhancements */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+            .admin-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .admin-card {
+                padding: 15px;
+            }
+            
+            /* Transforming Table to Cards on Mobile */
+            thead {
+                display: none; /* Hide headers on mobile */
+            }
+            tr {
+                display: block;
+                margin-bottom: 15px;
+                background: rgba(255, 255, 255, 0.03);
+                border-radius: 12px;
+                padding: 10px;
+                border: 1px solid rgba(255, 255, 255, 0.05);
+            }
+            td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 5px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                text-align: right;
+            }
+            td:last-child {
+                border-bottom: none;
+            }
+            td::before {
+                content: attr(data-label);
+                font-family: 'Outfit', sans-serif;
+                font-weight: 600;
+                color: #a1a1aa;
+                text-align: left;
+                font-size: 12px;
+                text-transform: uppercase;
+            }
+        }
     </style>
 </head>
 <body>
@@ -113,20 +161,16 @@
         async function fetchUsers() {
             const userListDiv = document.getElementById('userList');
             
-            // Note: By default, Supabase Client (Anon Key) cannot list all users in Auth.users
-            // This usually requires a Service Role Key or a custom 'profiles' table.
-            // For now, let's attempt to fetch from a 'profiles' table which is the standard practice.
-            
             const { data, error } = await supabaseClient
                 .from('profiles')
-                .select('*');
+                .select('*')
+                .order('created_at', { ascending: false });
 
             if (error) {
                 userListDiv.innerHTML = `
                     <div style="text-align: center; padding: 20px; color: #ef4444;">
                         <i class="ri-error-warning-line" style="font-size: 32px;"></i>
                         <p>Error: ${error.message}</p>
-                        <p style="font-size: 12px; margin-top: 10px; color: #a1a1aa;">Tip: Ensure you have created a 'profiles' table in Supabase.</p>
                     </div>
                 `;
                 return;
@@ -151,12 +195,13 @@
             `;
 
             data.forEach(user => {
+                const date = new Date(user.created_at).toLocaleDateString();
                 html += `
                     <tr>
-                        <td><strong>${user.full_name || 'Anonymous'}</strong></td>
-                        <td>${user.email || 'N/A'}</td>
-                        <td>${new Date(user.created_at).toLocaleDateString()}</td>
-                        <td><span class="status-badge status-active">Active</span></td>
+                        <td data-label="Name"><strong>${user.full_name || 'Anonymous'}</strong></td>
+                        <td data-label="Email">${user.email || 'N/A'}</td>
+                        <td data-label="Joined">${date}</td>
+                        <td data-label="Status"><span class="status-badge status-active">Active</span></td>
                     </tr>
                 `;
             });
