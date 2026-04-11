@@ -19,6 +19,8 @@
             overflow-y: auto;
             scroll-behavior: smooth;
             background: #09090b;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
         }
 
         .background-elements {
@@ -46,7 +48,8 @@
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.4s ease, top 0.4s ease;
+            will-change: transform, top;
         }
 
         .nav-logo {
@@ -218,12 +221,13 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 20px;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.4s ease, box-shadow 0.4s ease;
             flex: 0 0 calc(33.333% - 20px);
             /* 3 cards on desktop */
             min-width: 280px;
             scroll-snap-align: center;
             /* Snap to center of card */
+            will-change: transform;
         }
 
         @media (max-width: 1024px) {
@@ -430,6 +434,10 @@
             transform: translateY(-5px);
             border-color: rgba(139, 92, 246, 0.4);
             background: rgba(255, 255, 255, 0.06);
+        }
+
+        .blob {
+            will-change: transform;
         }
 
         .flow-step h3 {
@@ -1165,24 +1173,32 @@
         let lastScrollY = window.scrollY;
         const navbar = document.getElementById('navbar');
 
+        let ticking = false;
         window.addEventListener('scroll', () => {
-            const currentScrollY = window.scrollY;
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const currentScrollY = window.scrollY;
 
-            // Show at top, else follow scroll direction
-            if (currentScrollY < 50) {
-                navbar.style.transform = 'translateX(-50%) translateY(0)';
-                navbar.style.background = 'rgba(24, 24, 27, 0.6)';
-                navbar.style.top = '20px';
-            } else {
-                if (currentScrollY > lastScrollY) {
-                    navbar.style.transform = 'translateX(-50%) translateY(-150px)';
-                } else {
-                    navbar.style.transform = 'translateX(-50%) translateY(0)';
-                    navbar.style.background = 'rgba(9, 9, 11, 0.9)';
-                    navbar.style.top = '10px';
-                }
+                    if (currentScrollY < 50) {
+                        navbar.style.transform = 'translateX(-50%) translateY(0)';
+                        navbar.style.background = 'rgba(24, 24, 27, 0.6)';
+                        navbar.style.top = '20px';
+                    } else {
+                        if (currentScrollY > lastScrollY) {
+                            // Scrolling down
+                            navbar.style.transform = 'translateX(-50%) translateY(-150%)';
+                        } else {
+                            // Scrolling up
+                            navbar.style.transform = 'translateX(-50%) translateY(0)';
+                            navbar.style.background = 'rgba(9, 9, 11, 0.9)';
+                            navbar.style.top = '10px';
+                        }
+                    }
+                    lastScrollY = currentScrollY;
+                    ticking = false;
+                });
+                ticking = true;
             }
-            lastScrollY = currentScrollY;
         });
 
         // Mobile Menu Toggle

@@ -14,6 +14,8 @@ body {
     height: 100vh;
     overflow: hidden;
     position: relative;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, .logo {
@@ -37,6 +39,7 @@ h1, h2, h3, h4, .logo {
     border-radius: 50%;
     opacity: 0.6;
     animation: float 10s ease-in-out infinite;
+    will-change: transform;
 }
 
 .blob-1 {
@@ -75,6 +78,7 @@ h1, h2, h3, h4, .logo {
     max-width: 900px;
     min-height: 550px;
     display: flex;
+    will-change: transform, opacity;
 }
 
 .form-container {
@@ -142,12 +146,14 @@ form {
     gap: 8px;
     background: linear-gradient(to right, #818cf8, #c084fc);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .logo i {
     background: linear-gradient(to right, #818cf8, #c084fc);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     font-size: 28px;
 }
@@ -235,9 +241,10 @@ h2 {
     justify-content: center;
     align-items: center;
     gap: 8px;
-    transition: all 0.3s;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease, opacity 0.4s ease;
     box-shadow: 0 10px 20px -10px rgba(99, 102, 241, 0.5);
     margin-top: 10px;
+    will-change: transform;
 }
 
 .btn:hover {
