@@ -245,6 +245,8 @@ h2 {
     box-shadow: 0 10px 20px -10px rgba(99, 102, 241, 0.5);
     margin-top: 10px;
     will-change: transform;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .btn:hover {
@@ -260,7 +262,12 @@ h2 {
 }
 
 .btn:active {
-    transform: translateY(0);
+    transform: translateY(0) scale(0.96);
+    box-shadow: 0 5px 10px -5px rgba(99, 102, 241, 0.4);
+}
+
+.btn:focus {
+    outline: none;
 }
 
 .overlay-container {
