@@ -234,9 +234,25 @@
                     <i class="ri-lock-line"></i>
                     <input type="password" placeholder="Password" required />
                 </div>
-                <a href="#" class="forgot">Forgot your password?</a>
+                <a href="#" class="forgot" id="forgotPasswordBtn">Forgot your password?</a>
                 <button type="submit" class="btn">Sign In <i class="ri-arrow-right-line"></i></button>
                 <p class="mobile-toggle">Don't have an account? <a href="#" id="mobileSignUp">Sign Up</a></p>
+
+                <!-- Password Recovery Overlay (Self-contained) -->
+                <div id="recoveryOverlay"
+                    style="display: none; position: absolute; inset: 0; background: rgba(9, 9, 11, 0.95); z-index: 100; border-radius: 20px; padding: 40px; flex-direction: column; justify-content: center; backdrop-filter: blur(10px);">
+                    <h3 style="margin-bottom: 10px;">Reset Password</h3>
+                    <p style="font-size: 13px; color: #a1a1aa; margin-bottom: 25px;">Enter your email to receive a secure recovery
+                        link.</p>
+                    <div class="infield">
+                        <i class="ri-mail-line"></i>
+                        <input type="email" id="recoveryEmail" placeholder="Email Address" />
+                    </div>
+                    <button type="button" class="btn" id="sendRecoveryBtn" style="width: 100%;">Send Recovery Email</button>
+                    <p id="backToLogin"
+                        style="margin-top: 20px; font-size: 13px; color: #818cf8; cursor: pointer; text-align: center;">Back to
+                        Sign In</p>
+                </div>
 
                 <div class="features-list"
                     style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">

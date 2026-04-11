@@ -1,48 +1,36 @@
-# 🚀 Fusion CV — AI-Powered Career Platform
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Fusion CV is a premium, AI-powered resume building and optimization platform designed to give job seekers a competitive edge. It combines a modern, high-end aesthetic with powerful tools to create, validate, and style professional resumes.
+## Getting Started
 
-## ✨ Core Features
+First, run the development server:
 
-- **Interactive Dashboard**: A high-performance, single-fold mobile-first dashboard with real-time interactive workflows.
-- **ATS Resume Checker**: Instant validation of existing resumes with a dynamic score meter and actionable feedback.
-- **AI Resume Builder**: Intelligent content generation that transforms raw inputs into keyword-rich, professional summaries.
-- **Template Carousel**: A revolving catalog of 15+ high-end, ATS-optimized templates with a smooth, looping infinite-scroll experience.
-- **Premium Design System**: 
-  - **Glassmorphic UI**: Sophisticated layout with real-time blur and fluid gradients.
-  - **Dynamic Aesthetics**: Animated background blobs, sparkle effects, and smooth scroll snapping.
-  - **Ultra-Responsive**: Optimized mobile layouts with "first-fold" visibility and custom touch interactions.
-- **Advanced Admin Portal**: 
-  - Secure role-based management at `admin.html`.
-  - Real-time user tracking and database administration.
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-## 🛠️ Technology Stack
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-- **Frontend**: HTML5, Vanilla CSS3 (Custom Design System), JavaScript (ES6+).
-- **Icons**: [Remix Icon](https://remixicon.com/).
-- **Database & Auth**: [Supabase](https://supabase.com/) with Row Level Security (RLS).
-- **Typography**: Google Fonts (Inter & Outfit).
-- **Architecture**: Mobile-first, performance-optimized, and SEO-enhanced.
+You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 
-## 🚀 Getting Started
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-1. **Supabase Integration**:
-   Update `supabase-config.js` with your specific `SUPABASE_URL` and `SUPABASE_ANON_KEY`.
+## Learn More
 
-2. **Schema Configuration**:
-   The platform expects a `profiles` table in Supabase:
-   - `id`: UUID (Primary Key)
-   - `full_name`: Text
-   - `email`: Text
-   - `phone`: Text
-   - `created_at`: Timestamp
+To learn more about Next.js, take a look at the following resources:
 
-3. **Portal Access**:
-   Admin features are accessible via `admin-login.html` and restricted to authorized administrative emails.
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-## 📱 Visual & Mobile Excellence
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-Fusion CV utilizes **CSS Scroll Snapping** and **Liquid Layouts** to ensure a premium experience on every device. The platform is designed to look "stunning at first glance," with micro-animations and zero content overlaps.
+## Deploy on Vercel
 
----
-*Empowering the next generation of professionals with AI-driven precision.*
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
