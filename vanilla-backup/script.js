@@ -120,6 +120,56 @@ loginForm.addEventListener('submit', async (e) => {
     }
 });
 
+// Password Recovery Logic
+const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+const recoveryOverlay = document.getElementById('recoveryOverlay');
+const backToLogin = document.getElementById('backToLogin');
+const sendRecoveryBtn = document.getElementById('sendRecoveryBtn');
+const recoveryEmailInput = document.getElementById('recoveryEmail');
+
+if (forgotPasswordBtn) {
+    forgotPasswordBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        recoveryOverlay.style.display = 'flex';
+    });
+}
+
+if (backToLogin) {
+    backToLogin.addEventListener('click', () => {
+        recoveryOverlay.style.display = 'none';
+    });
+}
+
+if (sendRecoveryBtn) {
+    sendRecoveryBtn.addEventListener('click', async () => {
+        const email = recoveryEmailInput.value;
+        if (!email) {
+            showToast('Please enter your email', 'error');
+            return;
+        }
+
+        sendRecoveryBtn.disabled = true;
+        sendRecoveryBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Sending...';
+
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+            redirectTo: window.location.origin + '/reset-password.html',
+        });
+
+        if (error) {
+            showToast(error.message, 'error');
+            sendRecoveryBtn.disabled = false;
+            sendRecoveryBtn.innerHTML = 'Send Recovery Email';
+        } else {
+            showToast('Recovery link sent to your email!', 'success');
+            setTimeout(() => {
+                recoveryOverlay.style.display = 'none';
+                sendRecoveryBtn.disabled = false;
+                sendRecoveryBtn.innerHTML = 'Send Recovery Email';
+            }, 2000);
+        }
+    });
+}
+
 function showToast(message, type = 'info') {
     const container = document.getElementById('toastContainer');
     if (!container) return;
