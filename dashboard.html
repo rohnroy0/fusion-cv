@@ -766,7 +766,7 @@
             }
 
             .hero::before {
-                height: 150%;
+                height: 100%;
             }
 
             /* Extend color deeper on mobile */
@@ -915,11 +915,6 @@
 
             .mission-card h3 {
                 font-size: 26px;
-            }
-
-            .mission-card p {
-                font-size: 15px;
-                line-height: 1.8;
             }
         }
     </style>
@@ -1206,26 +1201,42 @@
             menuBtn.addEventListener('click', toggleMenu);
         }
 
-        // Initialize User Data
-        async function initUser() {
-            const { data: { user } } = await supabaseClient.auth.getUser();
-            const displayEmail = document.getElementById('displayEmail');
+        // Initialize/Protect User Data
+        async function initAuth() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            
+            if (!session) {
+                // If no user session, redirect to login page and clear history
+                window.location.replace('index.html');
+                return;
+            }
 
-            if (user) {
-                displayEmail.textContent = user.email;
-            } else {
-                // If no user, redirect to login
-                location.href = 'index.html';
+            // Display user info
+            const displayEmail = document.getElementById('displayEmail');
+            if (displayEmail) displayEmail.textContent = session.user.email;
+        }
+
+        // Listen for auth state changes (e.g. logout from other tab)
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_OUT' || !session) {
+                window.location.replace('index.html');
+            }
+        });
+
+        async function handleSignOut() {
+            try {
+                const { error } = await supabaseClient.auth.signOut();
+                if (error) throw error;
+            } catch (err) {
+                console.error('Logout error:', err);
+            } finally {
+                // Always redirect and replace history to prevent back button access
+                window.location.replace('index.html');
             }
         }
 
-        async function handleSignOut() {
-            const { error } = await supabaseClient.auth.signOut();
-            if (!error) location.href = 'index.html';
-        }
-
-        // Start initialization
-        initUser();
+        // Start Auth check immediately
+        initAuth();
         startMeterAnimation();
         initTemplateCarousel();
 

@@ -115,7 +115,7 @@ loginForm.addEventListener('submit', async (e) => {
     } else {
         showToast('Welcome back!', 'success');
         setTimeout(() => {
-            window.location.href = 'dashboard.html';
+            window.location.replace('dashboard.html');
         }, 1500);
     }
 });
