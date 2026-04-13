@@ -1,167 +1,300 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
-import Toast from '@/components/Toast';
 
-export default function LoginPage() {
-  const [isRightPanelActive, setIsRightPanelActive] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [toasts, setToasts] = useState([]);
-  const router = useRouter();
-
-  // Form states
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
-  const [signupName, setSignupName] = useState('');
-  const [signupEmail, setSignupEmail] = useState('');
-  const [signupPassword, setSignupPassword] = useState('');
+export default function LandingPage() {
+  const [session, setSession] = useState(null);
 
   useEffect(() => {
-    const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) router.replace('/dashboard');
-    };
-    checkUser();
-  }, [router]);
-
-  const addToast = (message, type = 'info') => {
-    const id = Date.now();
-    setToasts(prev => [...prev, { id, message, type }]);
-  };
-
-  const removeToast = (id) => {
-    setToasts(prev => prev.filter(t => t.id !== id));
-  };
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email: loginEmail,
-      password: loginPassword,
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
     });
-
-    if (error) {
-      addToast(error.message, 'error');
-      setLoading(false);
-    } else {
-      addToast('Welcome back!', 'success');
-      router.push('/dashboard');
-    }
-  };
-
-  const handleSignup = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    const { data, error } = await supabase.auth.signUp({
-      email: signupEmail,
-      password: signupPassword,
-      options: {
-        data: { full_name: signupName }
-      }
-    });
-
-    if (error) {
-      addToast(error.message, 'error');
-      setLoading(false);
-    } else {
-      // Profile creation handled via Supabase trigger in real apps, 
-      // but let's mirror vanilla logic for consistency
-      if (data.user) {
-         await supabase.from('profiles').insert([{ id: data.user.id, full_name: signupName, email: signupEmail }]);
-      }
-      addToast('Registration successful! Check your email.', 'success');
-      setLoading(false);
-    }
-  };
-
-
-
-  const features = [
-    { icon: 'ri-checkbox-circle-fill', text: 'AI Resume Builder' },
-    { icon: 'ri-checkbox-circle-fill', text: 'ATS Score Check' },
-    { icon: 'ri-checkbox-circle-fill', text: 'Instant PDF Download' },
-    { icon: 'ri-checkbox-circle-fill', text: 'Refine Your Resume' }
-  ];
-
-  const FeatureGrid = () => (
-    <div className="features-list">
-      <div className="features-grid">
-        {features.map((f, i) => (
-          <div key={i} className="feature-item">
-            <i className={f.icon}></i> {f.text}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  }, []);
 
   return (
-    <div className="login-wrapper">
-      <div className="toast-container">
-        {toasts.map(t => (
-          <Toast key={t.id} {...t} onClose={() => removeToast(t.id)} />
-        ))}
-      </div>
+    <div className="landing-container">
+      {/* Navigation */}
+      <nav className="fade-in landing-nav">
+        <div className="nav-logo">
+          <i className="ri-dashboard-fill" style={{ marginRight: '8px' }}></i> Fusion CV
+        </div>
+        <div className="nav-links">
+          {session ? (
+            <Link href="/dashboard" className="nav-btn">
+              Go to Dashboard <i className="ri-dashboard-line"></i>
+            </Link>
+          ) : (
+            <Link href="/login" className="nav-btn">
+              Sign In <i className="ri-arrow-right-line"></i>
+            </Link>
+          )}
+        </div>
+      </nav>
 
-      <div className="auth-card">
-        <div className="form-content">
-          <div className="auth-logo">
-            <i className="ri-dashboard-fill"></i> Fusion CV
+      {/* Main Content */}
+      <main className="hero fade-in landing-main">
+        <div className="hero-content">
+          <h1 className="hero-title">
+            <span className="gradient-text">Fusion CV</span> Where Your <br className="desktop-br"/>
+            Career Meets <span className="gradient-text">AI Precision.</span>
+          </h1>
+          <p className="hero-subtitle">
+            Craft a professional, ATS-optimized resume in minutes with Fusion CV. 
+            Smart suggestions, premium templates, and instant results.
+          </p>
+
+          <div className="trust-badges">
+            <div className="badge-item">
+               <i className="ri-checkbox-circle-fill"></i> 10,000+ resumes created
+            </div>
+            <div className="badge-item">
+               <i className="ri-checkbox-circle-fill"></i> ATS-friendly templates
+            </div>
+            <div className="badge-item">
+               <i className="ri-checkbox-circle-fill"></i> Used by students & professionals
+            </div>
+          </div>
+          
+          <div className="cta-container">
+            <Link href={session ? "/dashboard" : "/login"} style={{ textDecoration: 'none' }}>
+               <button className="auth-btn landing-cta">
+                 {session ? "Enter Dashboard" : "Get Started Now"} 
+                 <i className={session ? "ri-arrow-right-line" : "ri-rocket-line"} style={{ marginLeft: '12px' }}></i>
+               </button>
+            </Link>
           </div>
 
-          {isRightPanelActive ? (
-            <form onSubmit={handleSignup} className="fade-in">
-              <div className="auth-header">
-                <h2>Create Account</h2>
-                <span className="subtitle">Join to build outstanding resumes</span>
-              </div>
-              <div className="infield">
-                <i className="ri-user-line"></i>
-                <input type="text" placeholder="Full Name" required value={signupName} onChange={e => setSignupName(e.target.value)} />
-              </div>
-              <div className="infield">
-                <i className="ri-mail-line"></i>
-                <input type="email" placeholder="Email Address" required value={signupEmail} onChange={e => setSignupEmail(e.target.value)} />
-              </div>
-              <div className="infield">
-                <i className="ri-lock-line"></i>
-                <input type="password" placeholder="Password" required value={signupPassword} onChange={e => setSignupPassword(e.target.value)} />
-              </div>
-              <button type="submit" className="auth-btn" disabled={loading}>
-                {loading ? <i className="ri-loader-4-line ri-spin"></i> : 'Sign Up'} <i className="ri-arrow-right-line"></i>
-              </button>
-              <p className="auth-toggle">
-                Already have an account? <a href="#" onClick={(e) => { e.preventDefault(); setIsRightPanelActive(false); }}>Sign In</a>
-              </p>
-            </form>
-          ) : (
-            <form onSubmit={handleLogin} className="fade-in">
-              <div className="auth-header">
-                <h2>Welcome Back</h2>
-                <span className="subtitle">Sign in to continue your journey</span>
-              </div>
-              <div className="infield">
-                <i className="ri-mail-line"></i>
-                <input type="email" placeholder="Email Address" required value={loginEmail} onChange={e => setLoginEmail(e.target.value)} />
-              </div>
-              <div className="infield">
-                <i className="ri-lock-line"></i>
-                <input type="password" placeholder="Password" required value={loginPassword} onChange={e => setLoginPassword(e.target.value)} />
-              </div>
-              <button type="submit" className="auth-btn" disabled={loading}>
-                {loading ? <i className="ri-loader-4-line ri-spin"></i> : 'Sign In'} <i className="ri-arrow-right-line"></i>
-              </button>
-              <p className="auth-toggle">
-                Don't have an account? <a href="#" onClick={(e) => { e.preventDefault(); setIsRightPanelActive(true); }}>Sign Up</a>
-              </p>
-            </form>
-          )}
-
-          <FeatureGrid />
+          {/* Mini Features (Moved inside for better flow) */}
+          <div className="features-mini">
+            <div className="mini-item">
+              <i className="ri-cpu-line"></i> AI Suggestions
+            </div>
+            <div className="mini-item">
+              <i className="ri-shield-check-line"></i> ATS Scanned
+            </div>
+            <div className="mini-item">
+              <i className="ri-layout-grid-line"></i> Premium Templates
+            </div>
+          </div>
         </div>
-      </div>
+      </main>
+
+      {/* Simplified Footer */}
+      <footer className="landing-footer">
+        <p>&copy; 2026 Fusion CV • AI-Powered Resume Builder • Privacy & Terms</p>
+      </footer>
+
+      <style jsx>{`
+        .landing-container {
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          position: relative;
+        }
+
+        .landing-nav {
+          position: fixed;
+          top: 30px;
+          width: 90%;
+          max-width: 1200px;
+          z-index: 1000;
+        }
+
+        .landing-main {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          padding: 80px 40px;
+          min-height: 100vh;
+          width: 100%;
+        }
+
+        .hero-content {
+          text-align: center;
+          max-width: 900px;
+          margin-top: 100px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .cta-container {
+          display: flex;
+          justify-content: center;
+          width: 100%;
+        }
+
+        .hero-title {
+          font-size: clamp(48px, 10vh, 84px);
+          margin-bottom: 24px;
+          line-height: 1.1;
+          letter-spacing: -3px;
+          font-weight: 900;
+          text-align: center;
+        }
+
+        .hero-subtitle {
+          font-size: clamp(16px, 2.2vh, 21px);
+          margin-bottom: 40px;
+          margin-inline: auto;
+          max-width: 750px;
+          color: #a1a1aa;
+          line-height: 1.6;
+          text-align: center;
+        }
+
+        .trust-badges {
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 40px;
+          margin-bottom: 50px;
+          color: #a1a1aa;
+          font-size: 16px;
+        }
+
+        .badge-item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .badge-item i {
+          color: #10b981;
+          font-size: 20px;
+        }
+
+        .landing-cta {
+          width: auto;
+          padding: 22px 64px;
+          font-size: 22px;
+          box-shadow: 0 0 50px rgba(124, 92, 255, 0.3);
+        }
+
+        .features-mini {
+          display: flex;
+          gap: 60px;
+          margin-top: 30px;
+          opacity: 0.6;
+        }
+
+        .mini-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          color: #a1a1aa;
+          font-weight: 500;
+          font-size: 14px;
+        }
+
+        .mini-item i {
+          color: #7c5cff;
+          font-size: 22px;
+        }
+
+        .landing-footer {
+          width: 100%;
+          text-align: center;
+          color: #52525b;
+          font-size: 13px;
+          padding: 60px 20px;
+          background: rgba(255, 255, 255, 0.02);
+          border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        @media (max-width: 1024px) {
+           .hero-title { letter-spacing: -1px; }
+           .features-mini { gap: 40px; }
+        }
+
+        @media (max-width: 768px) {
+          .landing-container {
+            min-height: 100vh;
+            min-height: 100svh;
+            height: auto;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 40px 20px !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+          }
+
+          @media (max-height: 700px) {
+            .landing-container {
+              padding: 20px 20px !important;
+              justify-content: flex-start;
+            }
+            .landing-nav {
+              margin-bottom: 20px !important;
+            }
+            .landing-main {
+              margin-bottom: 20px !important;
+              gap: 20px !important;
+            }
+          }
+
+          .landing-nav {
+            flex-shrink: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+          }
+
+          .landing-main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            gap: 4vh; /* Elastic gap for tall screens */
+            padding: 2vh 0;
+          }
+
+          .hero-title {
+            font-size: clamp(34px, 8vh, 44px);
+            line-height: 1.1;
+            margin-bottom: 2vh;
+          }
+
+          .hero-subtitle {
+            font-size: clamp(14px, 2.5vh, 17px);
+            margin-bottom: 3vh;
+            max-width: 100%;
+          }
+
+          .trust-badges {
+            flex-direction: column;
+            gap: 1.5vh;
+            margin-bottom: 4vh;
+          }
+
+          .features-mini {
+            flex-direction: column;
+            gap: 1.5vh;
+            margin-top: 2vh;
+          }
+
+          .landing-cta {
+            padding: 2.5vh 40px;
+            font-size: 20px;
+            width: 100%;
+            max-width: 320px;
+          }
+
+          .landing-footer {
+            flex-shrink: 0;
+            padding: 40px 20px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+          }
+        }
+      `}</style>
     </div>
   );
 }

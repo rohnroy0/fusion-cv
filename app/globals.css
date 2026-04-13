@@ -414,19 +414,20 @@ nav {
 .nav-links a:hover { color: #fff; }
 
 .nav-btn {
-  background: linear-gradient(to right, #818cf8, #c084fc);
+  background: linear-gradient(135deg, #7c5cff, #6d4aff);
   color: #fff;
-  padding: 8px 18px;
+  padding: 10px 22px;
   border-radius: 100px;
-  font-weight: 600;
-  font-size: 13px;
+  font-weight: 700;
+  font-size: 14px;
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 8px;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(124, 92, 255, 0.3);
 }
 
 .nav-btn:hover {
