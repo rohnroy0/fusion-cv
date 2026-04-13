@@ -14,24 +14,6 @@ export default function LandingPage() {
 
   return (
     <div className="landing-container">
-      {/* Navigation */}
-      <nav className="fade-in landing-nav">
-        <div className="nav-logo">
-          <i className="ri-dashboard-fill" style={{ marginRight: '8px' }}></i> Fusion CV
-        </div>
-        <div className="nav-links">
-          {session ? (
-            <Link href="/dashboard" className="nav-btn">
-              Go to Dashboard <i className="ri-dashboard-line"></i>
-            </Link>
-          ) : (
-            <Link href="/login" className="nav-btn">
-              Sign In <i className="ri-arrow-right-line"></i>
-            </Link>
-          )}
-        </div>
-      </nav>
-
       {/* Main Content */}
       <main className="hero fade-in landing-main">
         <div className="hero-content">
@@ -40,8 +22,8 @@ export default function LandingPage() {
             Career Meets <span className="gradient-text">AI Precision.</span>
           </h1>
           <p className="hero-subtitle">
-            Craft a professional, ATS-optimized resume in minutes with Fusion CV. 
-            Smart suggestions, premium templates, and instant results.
+            Craft a professional, ATS-optimized resume & AI-powered cover letter in minutes. 
+            Smart suggestions, premium templates, and instant career-ready results.
           </p>
 
           <div className="trust-badges">
@@ -50,6 +32,9 @@ export default function LandingPage() {
             </div>
             <div className="badge-item">
                <i className="ri-checkbox-circle-fill"></i> ATS-friendly templates
+            </div>
+            <div className="badge-item">
+               <i className="ri-checkbox-circle-fill"></i> AI-powered Cover Letters
             </div>
             <div className="badge-item">
                <i className="ri-checkbox-circle-fill"></i> Used by students & professionals
@@ -74,6 +59,9 @@ export default function LandingPage() {
               <i className="ri-shield-check-line"></i> ATS Scanned
             </div>
             <div className="mini-item">
+              <i className="ri-file-list-3-line"></i> AI Cover Letters
+            </div>
+            <div className="mini-item">
               <i className="ri-layout-grid-line"></i> Premium Templates
             </div>
           </div>
@@ -86,36 +74,19 @@ export default function LandingPage() {
       </footer>
 
       <style jsx>{`
-        .landing-container {
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          position: relative;
-        }
-
-        .landing-nav {
-          position: fixed;
-          top: 30px;
-          width: 90%;
-          max-width: 1200px;
-          z-index: 1000;
-        }
-
         .landing-main {
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          padding: 80px 40px;
+          padding: 40px 40px;
           min-height: 100vh;
           width: 100%;
         }
 
         .hero-content {
           text-align: center;
-          max-width: 900px;
-          margin-top: 100px;
+          max-width: 1000px;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -128,20 +99,20 @@ export default function LandingPage() {
         }
 
         .hero-title {
-          font-size: clamp(48px, 10vh, 84px);
-          margin-bottom: 24px;
+          font-size: clamp(56px, 12vh, 100px);
+          margin-bottom: 30px;
           line-height: 1.1;
-          letter-spacing: -3px;
-          font-weight: 900;
+          letter-spacing: -4px;
+          font-weight: 950;
           text-align: center;
         }
 
         .hero-subtitle {
-          font-size: clamp(16px, 2.2vh, 21px);
-          margin-bottom: 40px;
+          font-size: clamp(18px, 2.5vh, 23px);
+          margin-bottom: 50px;
           margin-inline: auto;
-          max-width: 750px;
-          color: #a1a1aa;
+          max-width: 850px;
+          color: #d1d1d6;
           line-height: 1.6;
           text-align: center;
         }
@@ -214,84 +185,121 @@ export default function LandingPage() {
           .landing-container {
             min-height: 100vh;
             min-height: 100svh;
-            height: auto;
-            overflow-y: auto;
-            overflow-x: hidden;
+            background: radial-gradient(circle at top right, rgba(124, 92, 255, 0.05), transparent),
+                        radial-gradient(circle at bottom left, rgba(167, 139, 250, 0.05), transparent);
             padding: 40px 20px !important;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-          }
-
-          @media (max-height: 700px) {
-            .landing-container {
-              padding: 20px 20px !important;
-              justify-content: flex-start;
-            }
-            .landing-nav {
-              margin-bottom: 20px !important;
-            }
-            .landing-main {
-              margin-bottom: 20px !important;
-              gap: 20px !important;
-            }
-          }
-
-          .landing-nav {
-            flex-shrink: 0;
-            width: 100%;
-            display: flex;
-            justify-content: center;
+            gap: 40px;
           }
 
           .landing-main {
-            flex-grow: 1;
+            padding: 0;
+            min-height: auto;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            width: 100%;
-            gap: 4vh; /* Elastic gap for tall screens */
-            padding: 2vh 0;
+            gap: 30px;
           }
 
           .hero-title {
-            font-size: clamp(34px, 8vh, 44px);
+            font-size: 42px;
+            font-weight: 900;
             line-height: 1.1;
-            margin-bottom: 2vh;
+            letter-spacing: -2px;
+            text-align: center;
           }
 
           .hero-subtitle {
-            font-size: clamp(14px, 2.5vh, 17px);
-            margin-bottom: 3vh;
+            font-size: 16px;
+            color: #a1a1aa;
+            line-height: 1.6;
+            margin-bottom: 0;
+            text-align: center;
             max-width: 100%;
           }
 
           .trust-badges {
-            flex-direction: column;
-            gap: 1.5vh;
-            margin-bottom: 4vh;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            margin: 10px 0;
+            width: 100%;
           }
 
-          .features-mini {
-            flex-direction: column;
-            gap: 1.5vh;
-            margin-top: 2vh;
+          .badge-item {
+            font-size: 14px;
+            color: #f4f4f5;
+            font-weight: 500;
+            justify-content: center;
+          }
+
+          .badge-item i {
+            color: #10b981 !important;
+            font-size: 18px;
+          }
+
+          .cta-container {
+             width: 100%;
+             margin-top: 10px;
           }
 
           .landing-cta {
-            padding: 2.5vh 40px;
-            font-size: 20px;
             width: 100%;
-            max-width: 320px;
+            border-radius: 20px;
+            padding: 22px;
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #7c5cff 0%, #a78bfa 100%);
+            box-shadow: 0 15px 35px rgba(124, 92, 255, 0.4);
+            animation: pulse-mobile 3s infinite;
+          }
+
+          @keyframes pulse-mobile {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+          }
+
+          .features-mini {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 20px;
+            width: 100%;
+          }
+
+          .mini-item {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 12px;
+            font-size: 12px;
+            color: #a1a1aa;
+            font-weight: 600;
+          }
+
+          .mini-item i {
+            font-size: 24px;
+            color: #7c5cff !important;
           }
 
           .landing-footer {
-            flex-shrink: 0;
-            padding: 40px 20px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.02);
+            margin-top: auto;
+            padding: 40px 0 20px;
+            background: none;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 11px;
+            opacity: 0.5;
           }
         }
       `}</style>
