@@ -53,8 +53,23 @@ export default function Dashboard() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) router.replace('/');
-      setSession(session);
+      if (!session) {
+        router.replace('/');
+      } else {
+        setSession(session);
+        // Auto-create profile if user verified via email link instead of OTP box
+        const verifyProfileExists = async () => {
+          const { data } = await supabase.from('profiles').select('id').eq('id', session.user.id).maybeSingle();
+          if (!data) {
+            await supabase.from('profiles').insert([{
+              id: session.user.id,
+              full_name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'User',
+              email: session.user.email
+            }]);
+          }
+        };
+        verifyProfileExists();
+      }
     });
 
     const handleResize = () => {
