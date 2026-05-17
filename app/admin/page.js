@@ -65,6 +65,23 @@ export default function AdminPortal() {
     setLoading(false);
   };
 
+  const handleDeleteUser = async (userId, userName) => {
+    if (!confirm(`Are you sure you want to permanently delete user "${userName}"?`)) return;
+
+    setLoading(true);
+    // Call our secure PostgreSQL function to delete from auth.users
+    const { error } = await supabase.rpc('delete_admin_user', { target_user_id: userId });
+    
+    if (error) {
+      console.error("RPC Delete Error:", error);
+      addToast(`Deletion Failed: ${error.message}`, 'error');
+    } else {
+      addToast(`User "${userName}" permanently deleted`, 'success');
+      setUsers(prev => prev.filter(u => u.id !== userId));
+    }
+    setLoading(false);
+  };
+
   const logout = async () => {
     sessionStorage.removeItem('fusion_admin_session');
     await supabase.auth.signOut();
@@ -138,6 +155,7 @@ export default function AdminPortal() {
                   <th style={{ textAlign: 'left' }}>Contact Address</th>
                   <th style={{ textAlign: 'left' }}>Registration Date</th>
                   <th style={{ textAlign: 'left' }}>Current Status</th>
+                  <th style={{ textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -157,6 +175,16 @@ export default function AdminPortal() {
                        <span className="status-badge active">
                          Active
                        </span>
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
+                      <button 
+                        onClick={() => handleDeleteUser(user.id, user.full_name || user.email)} 
+                        style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '6px 12px', borderRadius: '8px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '13px', transition: 'all 0.2s ease' }}
+                        onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(239, 68, 68, 0.25)'; }}
+                        onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(239, 68, 68, 0.15)'; }}
+                      >
+                        <i className="ri-delete-bin-line"></i> Delete
+                      </button>
                     </td>
                   </tr>
                 ))}
