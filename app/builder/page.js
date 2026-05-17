@@ -9,6 +9,7 @@ export default function BuilderPage() {
   // Collecting explicitly what the template needs
   const [formData, setFormData] = useState({
     name: 'John Doe',
+    image: '',
     role: 'Software Engineer',
     phone: '555-0192',
     email: 'john@example.com',
@@ -33,6 +34,7 @@ export default function BuilderPage() {
     // Format the payload natively without AI
     const finalData = {
       name: formData.name,
+      image: formData.image,
       role: formData.role,
       phone: formData.phone,
       email: formData.email,
@@ -67,6 +69,45 @@ export default function BuilderPage() {
 
   const handleChange = (e) => setFormData({...formData, [e.target.name]: e.target.value});
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const img = new Image();
+        img.onload = () => {
+          const MAX_WIDTH = 300;
+          const MAX_HEIGHT = 300;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+          setFormData({ ...formData, image: compressedBase64 });
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const inputStyle = { width: '100%', padding: '12px 15px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.02)', color: 'white', outline: 'none', marginBottom: '15px' };
   const labelStyle = { display: 'block', marginBottom: '6px', color: '#e2e8f0', fontSize: '13px', fontWeight: 500 };
 
@@ -81,38 +122,52 @@ export default function BuilderPage() {
           </div>
 
           <form onSubmit={handleSubmit}>
-            <div style={{ display: 'flex', gap: '20px' }}>
-              <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+              <div style={{ flex: '1 1 250px' }}>
                 <label style={labelStyle}>Full Name</label>
                 <input name="name" value={formData.name} onChange={handleChange} style={inputStyle} required />
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: '1 1 250px' }}>
+                <label style={labelStyle}>Profile Photo (Optional)</label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <label style={{ ...inputStyle, marginBottom: 0, cursor: 'pointer', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', flex: 1 }}>
+                    <i className="ri-image-add-line"></i> {formData.image ? 'Photo Selected' : 'Upload Photo'}
+                    <input type="file" accept="image/*" onChange={handleImageUpload} style={{ display: 'none' }} />
+                  </label>
+                  {formData.image && (
+                    <div style={{ width: '42px', height: '42px', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', flexShrink: 0 }}>
+                      <img src={formData.image} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div style={{ flex: '1 1 250px' }}>
                 <label style={labelStyle}>Target Role</label>
                 <input name="role" value={formData.role} onChange={handleChange} style={inputStyle} required />
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '20px' }}>
-              <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+              <div style={{ flex: '1 1 250px' }}>
                 <label style={labelStyle}>Phone</label>
                 <input name="phone" value={formData.phone} onChange={handleChange} style={inputStyle} required />
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: '1 1 250px' }}>
                 <label style={labelStyle}>Email</label>
                 <input name="email" value={formData.email} onChange={handleChange} style={inputStyle} required />
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: '1 1 250px' }}>
                 <label style={labelStyle}>Address (City, State)</label>
                 <input name="address" value={formData.address} onChange={handleChange} style={inputStyle} required />
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '20px' }}>
-              <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+              <div style={{ flex: '1 1 250px' }}>
                 <label style={labelStyle}>Core Skills (Comma separated)</label>
                 <input name="skills" value={formData.skills} onChange={handleChange} style={inputStyle} required />
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: '1 1 250px' }}>
                 <label style={labelStyle}>Languages</label>
                 <input name="languages" value={formData.languages} onChange={handleChange} style={inputStyle}  />
               </div>
@@ -120,16 +175,16 @@ export default function BuilderPage() {
 
             <h4 style={{ color: '#818cf8', marginTop: '15px', marginBottom: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '10px' }}>Recent Experience</h4>
             
-            <div style={{ display: 'flex', gap: '20px' }}>
-              <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+              <div style={{ flex: '1 1 250px' }}>
                 <label style={labelStyle}>Job Title</label>
                 <input name="experience_title" value={formData.experience_title} onChange={handleChange} style={inputStyle} required />
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: '1 1 250px' }}>
                 <label style={labelStyle}>Company</label>
                 <input name="experience_company" value={formData.experience_company} onChange={handleChange} style={inputStyle} required />
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: '1 1 250px' }}>
                 <label style={labelStyle}>Years</label>
                 <input name="experience_years" value={formData.experience_years} onChange={handleChange} style={inputStyle} required />
               </div>
@@ -140,16 +195,16 @@ export default function BuilderPage() {
 
             <h4 style={{ color: '#818cf8', marginTop: '10px', marginBottom: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '10px' }}>Education</h4>
             
-            <div style={{ display: 'flex', gap: '20px' }}>
-              <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+              <div style={{ flex: '1 1 250px' }}>
                 <label style={labelStyle}>Degree</label>
                 <input name="education_degree" value={formData.education_degree} onChange={handleChange} style={inputStyle} required />
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: '1 1 250px' }}>
                 <label style={labelStyle}>College/University</label>
                 <input name="education_college" value={formData.education_college} onChange={handleChange} style={inputStyle} required />
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: '1 1 250px' }}>
                 <label style={labelStyle}>Years</label>
                 <input name="education_years" value={formData.education_years} onChange={handleChange} style={inputStyle} required />
               </div>

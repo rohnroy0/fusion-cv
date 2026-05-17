@@ -28,6 +28,7 @@ export default function Dashboard() {
   const [activeStep, setActiveStep] = useState(1);
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
   const router = useRouter();
 
   const allTemplates = [
@@ -74,6 +75,7 @@ export default function Dashboard() {
 
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
+      setIsTablet(window.innerWidth > 768 && window.innerWidth <= 1024);
     };
 
     handleResize();
@@ -100,8 +102,8 @@ export default function Dashboard() {
     };
   }, [router]);
 
-  const itemsPerPage = isMobile ? 1 : 3;
-  const templates = isMobile ? allTemplates.slice(0, 4) : allTemplates;
+  const itemsPerPage = isMobile ? 1 : isTablet ? 2 : 3;
+  const templates = isMobile ? allTemplates.slice(0, 4) : isTablet ? allTemplates.slice(0, 8) : allTemplates;
   const totalPages = Math.ceil(templates.length / itemsPerPage);
 
   const slideTemplates = (direction) => {
